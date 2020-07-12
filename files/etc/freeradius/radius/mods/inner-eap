@@ -1,0 +1,30 @@
+# -*- text -*-
+#
+#  $Id: 576eb7739ebf18ca6323cb740a7d4278ff6d6ea2 $
+
+#
+#  Sample configuration for an EAP module that occurs *inside*
+#  of a tunneled method.  It is used to limit the EAP types that
+#  can occur inside of the inner tunnel.
+#
+#  See also raddb/sites-available/inner-tunnel
+#
+#  See raddb/mods-available/eap for full documentation on the meaning of these
+#  configuration entries.
+#
+eap inner-eap {
+    # Use MSCHAPv2 for inner tunnel
+    default_eap_type = mschapv2
+    
+    # EAP session timeout
+    timer_expire = 60
+
+    # Max. number of sessions for DDOS mitigation
+    max_sessions = ${max_requests}
+
+    # Enable MSCHAPv2
+    mschapv2 {
+        # See eap for documentation
+        # send_error = no
+    }
+}

@@ -1,0 +1,29 @@
+ldap {
+    # Server configuration
+    server = "${ldap_server}"
+    port = ${ldap_port}
+    identity = "${ldap_username}"
+    password = "${ldap_secret}"
+
+    # Variables
+    bind_dn = ${ldap_bind_dn}
+    user_dn = "LDAP-UserDn"
+
+    options {
+      chase_referrals = yes
+      rebind = yes
+    }
+
+    user {
+      base_dn = "${..bind_dn}"
+      filter = "(|(sAMAccountName=%{%{Stripped-User-Name}:-%{User-Name}})(servicePrincipalName=%{%{Stripped-User-Name}:-%{User-Name}}))"
+    }
+    
+    group {
+      base_dn = "${..bind_dn}"
+      filter = "(objectClass=group)"
+
+      membership_filter = "(|(member=%{control:${..user_dn}})(memberUid=%{%{Stripped-User-Name}:-%{User-Name}}))"
+      membership_attribute = 'memberOf'
+    }
+}

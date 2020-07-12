@@ -1,0 +1,21 @@
+# Main site
+server radius {
+    listen {
+        type = auth
+        ipaddr = *
+        port = 1812
+    }
+
+    authorize {
+        # Process hints and huntgroups and convert them to the standard format
+        preprocess
+
+        # Only support EAP
+        eap
+    }
+
+    authenticate {
+        # Only support EAP
+        eap
+    }
+}

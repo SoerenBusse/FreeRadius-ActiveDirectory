@@ -1,0 +1,29 @@
+version: "3.7"
+services:
+  radius:
+    image: radius:latest
+    ports:
+      - "1812:1812/udp"
+    volumes:
+      - /root/.acme.sh/<URL OF CERTIFICATE>:/cert
+      - /opt/radius/log:/log
+    hostname: <HOSTNAME OF CONTAINER - IMPORTANT!>
+    dns: <ACTIVE DIRECTORY DOMAIN CONTROLLER IP>
+    environment:
+      - REALM=<Kerberos Realm, like SAMDOMAIN.TLD in CAPS!>
+      - DOMAIN=<Workgroup name like samdom>
+      - JOIN_USER=FreeRADIUS # Create this user in Active Directory
+      - JOIN_USER_SECRET=XXXXXX # Password of JOIN_USER
+      - LDAP_SERVER=<DOMAIN CONTROLLER ADDRESS>
+      - LDAP_PORT=389
+      - LDAP_USERNAME=<LDAP LOOKUP USER>
+      - LDAP_SECRET=<LDAP LOOKUP USER PASSWORD>
+      - LDAP_BIND_DN=<LDAP BIND DN>
+      - RADIUS_TLS_CERTIFICATE_FILE=fullchain.cer
+      - RADIUS_TLS_KEY_FILE=wifi.<DOMAIN>.key # Replace by your Domain TLS Key
+      - ACCESS_POINT_SECRET=XXXXX # Password which needs to be added to your radius profile in your access point
+      - EXTERNAL_IP=XXXX # The external ip of this machine. Will be added as DNS A/AAAA record on your DNS Domain Controller
+      - DEBUG=1 # Optional: Enable debug
+      - VLAN_MAPPING_0=VLAN-Private:10 # Map AD group VLAN-Private to VLAN id 10
+      - VLAN_MAPPING_1=VLAN-Admin:11 # Map AD group VLAN-Admin to VLAN id 11
+      

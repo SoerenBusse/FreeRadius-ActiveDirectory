@@ -1,0 +1,9 @@
+# MSCHAP configuraiton
+mschap {
+    # MS-MPPE-Send-Key -> Microsoft stuff
+    use_mppe = yes
+
+    # Use winbdind for challenge-response authentication
+    winbind_username = "%{mschap:User-Name}"
+    winbind_domain = "${mschap_winbind_domain}"
+}

@@ -1,0 +1,50 @@
+eap {
+    # Use PEAP by default
+    default_eap_type = peap
+
+    # EAP session timeout
+    timer_expire = 60
+
+    # Don't ignore unknown EAP types
+    ignore_unknown_eap_types = no
+
+    # Enable for Cisco AP1230B firmware 12.2(13)JA1 support
+    cisco_accounting_username_bug = no
+
+    # Session limit for DDOS mitigation
+    max_sessions = ${max_requests}
+
+    # TLS configuration for PEAP
+    tls-config tls-peap {
+        # Private key
+        private_key_file = ${eap_tls_private_key_file}
+
+        # Certificate
+        certificate_file = ${eap_tls_certificate_file}
+
+        # Tusted root CAs
+        ca_file = /etc/ssl/certs/ca-certificates.crt
+
+        # Allowed TLS version range
+        tls_max_version = "1.2"
+        tls_min_version = "1.0"
+    }
+
+    # Enable PEAP
+    peap {
+        # Use TLS-Common configuration
+        tls = tls-peap
+
+        # Use MSCHAPv2 by default for the inner protocol
+        default_eap_type = mschapv2
+
+        # Copy request attributes to inner tunnel
+        copy_request_to_tunnel = yes
+
+        # Copy response attributes to outer tunnel       
+        use_tunneled_reply = yes 
+
+        # Forward requests to inner tunnel
+        virtual_server = "radius-inner-tunnel"
+    }
+}
